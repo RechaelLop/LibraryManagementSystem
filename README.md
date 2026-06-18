@@ -2,23 +2,10 @@
 
 A complete Library Management System built with **Microsoft SQL Server** that demonstrates database design, T-SQL programming, and data management skills.
 
-## ?? Table of Contents
-- [Overview](#overview)
-- [Features](#features)
-- [Database Schema](#database-schema)
-- [Stored Procedures](#stored-procedures)
-- [Views](#views)
-- [Installation](#installation)
-- [Sample Queries](#sample-queries)
-- [Technologies Used](#technologies-used)
-- [Skills Demonstrated](#skills-demonstrated)
-- [Project Structure](#project-structure)
-- [Future Enhancements](#future-enhancements)
-- [Author](#author)
 
 ---
 
-## ?? Overview
+## Overview
 
 This Library Management System is a fully functional database application that manages:
 - ?? Books inventory
@@ -31,9 +18,9 @@ The project showcases advanced SQL skills including stored procedures, views, tr
 
 ---
 
-## ? Features
+## Features
 
-### Core Features
+Core Features
 - **Book Management**: Add, search, and track book inventory
 - **Member Management**: Register and manage library members
 - **Borrowing System**: Borrow and return books with automatic validation
@@ -41,7 +28,7 @@ The project showcases advanced SQL skills including stored procedures, views, tr
 - **Search Functionality**: Search books by title, author, or genre
 - **Borrowing History**: View complete borrowing history for any member
 
-### Advanced Features
+Advanced Features
 - **Transaction Management**: Safe borrow/return operations with rollback
 - **Error Handling**: Comprehensive validation with user-friendly messages
 - **Reporting**: Multiple views for library analytics
@@ -49,11 +36,11 @@ The project showcases advanced SQL skills including stored procedures, views, tr
 
 ---
 
-## ??? Database Schema
+## Database Schema
 
-### Tables
+Tables
 
-#### 1. Books Table
+1. Books Table
 | Column | Type | Description |
 |--------|------|-------------|
 | book_id | INT (PK, Identity) | Unique book identifier |
@@ -65,7 +52,7 @@ The project showcases advanced SQL skills including stored procedures, views, tr
 | available_copies | INT | Currently available copies |
 | created_at | DATETIME | Record creation timestamp |
 
-#### 2. Members Table
+2. Members Table
 | Column | Type | Description |
 |--------|------|-------------|
 | member_id | INT (PK, Identity) | Unique member identifier |
@@ -76,7 +63,7 @@ The project showcases advanced SQL skills including stored procedures, views, tr
 | membership_date | DATE | Date of membership |
 | status | NVARCHAR(20) | Active/Inactive |
 
-#### 3. Borrowing Table
+3. Borrowing Table
 | Column | Type | Description |
 |--------|------|-------------|
 | borrow_id | INT (PK, Identity) | Transaction identifier |
@@ -88,4 +75,19 @@ The project showcases advanced SQL skills including stored procedures, views, tr
 | status | NVARCHAR(20) | Borrowed/Returned |
 | fine_amount | DECIMAL(10,2) | Calculated fine amount |
 
-### Entity Relationship Diagram
+
+## Project Structure
+
+LibraryManagementSystem/
+├── 01_CreateDatabase.sql      - Database creation
+├── 02_CreateTables.sql        - Table creation with constraints
+├── 03_InsertSampleData.sql    - Sample data
+├── 04_CreateProcedures.sql    - Stored procedures
+├── 05_CreateViews.sql         - Reporting views
+├── 06_TestQueries.sql         - Complete test suite
+└── README.md                  - This file
+
+## Author
+
+Rechael Lopes
+GitHub: https://github.com/RechaelLop/LibraryManagementSystem 
