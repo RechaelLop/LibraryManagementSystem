@@ -1,5 +1,5 @@
--- ============================================
--- PHASE 5: CREATE VIEWS
+﻿-- ============================================
+-- PHASE 5: CREATE VIEWS (CORRECTED)
 -- Library Management System
 -- ============================================
 
@@ -7,13 +7,12 @@ USE LibraryManagement;
 GO
 
 PRINT '============================================';
-PRINT 'PHASE 5: Creating Views';
+PRINT 'PHASE 5: Creating Views (Corrected)';
 PRINT '============================================';
 GO
 
 -- ============================================
 -- VIEW 1: Currently Borrowed Books
--- Shows all books that are currently checked out
 -- ============================================
 PRINT 'Creating view: CurrentlyBorrowed...';
 GO
@@ -30,10 +29,10 @@ SELECT
     b.due_date,
     DATEDIFF(DAY, GETDATE(), b.due_date) AS DaysRemaining,
     CASE 
-        WHEN b.due_date < GETDATE() THEN '?? OVERDUE'
-        WHEN DATEDIFF(DAY, GETDATE(), b.due_date) <= 3 THEN '?? Due Soon'
-        WHEN DATEDIFF(DAY, GETDATE(), b.due_date) <= 7 THEN '?? Due This Week'
-        ELSE '?? On Time'
+        WHEN b.due_date < GETDATE() THEN '⚠️ OVERDUE'
+        WHEN DATEDIFF(DAY, GETDATE(), b.due_date) <= 3 THEN '🔴 Due Soon'
+        WHEN DATEDIFF(DAY, GETDATE(), b.due_date) <= 7 THEN '🟡 Due This Week'
+        ELSE '🟢 On Time'
     END AS StatusAlert
 FROM borrowing b
 JOIN books bk ON b.book_id = bk.book_id
@@ -41,12 +40,11 @@ JOIN members m ON b.member_id = m.member_id
 WHERE b.status = 'Borrowed';
 GO
 
-PRINT '? CurrentlyBorrowed view created!';
+PRINT '✅ CurrentlyBorrowed view created!';
 GO
 
 -- ============================================
--- VIEW 2: Overdue Books
--- Shows all books that are past their due date
+-- VIEW 2: Overdue Books (REMOVED ORDER BY)
 -- ============================================
 PRINT 'Creating view: OverdueBooks...';
 GO
@@ -69,16 +67,15 @@ FROM borrowing b
 JOIN books bk ON b.book_id = bk.book_id
 JOIN members m ON b.member_id = m.member_id
 WHERE b.status = 'Borrowed' 
-AND b.due_date < GETDATE()
-ORDER BY b.due_date ASC;
+AND b.due_date < GETDATE();
+-- ORDER BY removed from view - will be added when querying
 GO
 
-PRINT '? OverdueBooks view created!';
+PRINT '✅ OverdueBooks view created!';
 GO
 
 -- ============================================
 -- VIEW 3: Book Popularity
--- Shows most borrowed books
 -- ============================================
 PRINT 'Creating view: BookPopularity...';
 GO
@@ -93,9 +90,9 @@ SELECT
     bk.total_copies,
     bk.available_copies,
     CASE 
-        WHEN COUNT(b.borrow_id) >= 3 THEN '?? Very Popular'
-        WHEN COUNT(b.borrow_id) >= 1 THEN '?? Popular'
-        ELSE '?? Available'
+        WHEN COUNT(b.borrow_id) >= 3 THEN '🔥 Very Popular'
+        WHEN COUNT(b.borrow_id) >= 1 THEN '📖 Popular'
+        ELSE '📚 Available'
     END AS PopularityRating,
     CASE 
         WHEN bk.available_copies = 0 THEN 'Out of Stock'
@@ -107,12 +104,11 @@ LEFT JOIN borrowing b ON bk.book_id = b.book_id
 GROUP BY bk.book_id, bk.title, bk.author, bk.genre, bk.total_copies, bk.available_copies;
 GO
 
-PRINT '? BookPopularity view created!';
+PRINT '✅ BookPopularity view created!';
 GO
 
 -- ============================================
 -- VIEW 4: Member Activity Summary
--- Shows borrowing statistics for each member
 -- ============================================
 PRINT 'Creating view: MemberActivity...';
 GO
@@ -130,22 +126,21 @@ SELECT
     SUM(CASE WHEN b.status = 'Borrowed' AND b.due_date < GETDATE() THEN 1 ELSE 0 END) AS OverdueBooks,
     ISNULL(SUM(b.fine_amount), 0) AS TotalFines,
     CASE 
-        WHEN SUM(CASE WHEN b.status = 'Borrowed' AND b.due_date < GETDATE() THEN 1 ELSE 0 END) > 0 THEN '?? Has Overdue Books'
-        WHEN SUM(CASE WHEN b.status = 'Borrowed' THEN 1 ELSE 0 END) > 0 THEN '?? Active Borrower'
-        WHEN COUNT(b.borrow_id) > 0 THEN '?? Past Borrower'
-        ELSE '? No Activity'
+        WHEN SUM(CASE WHEN b.status = 'Borrowed' AND b.due_date < GETDATE() THEN 1 ELSE 0 END) > 0 THEN '🔴 Has Overdue Books'
+        WHEN SUM(CASE WHEN b.status = 'Borrowed' THEN 1 ELSE 0 END) > 0 THEN '🟢 Active Borrower'
+        WHEN COUNT(b.borrow_id) > 0 THEN '📖 Past Borrower'
+        ELSE '⚪ No Activity'
     END AS MemberActivityStatus
 FROM members m
 LEFT JOIN borrowing b ON m.member_id = b.member_id
 GROUP BY m.member_id, m.first_name, m.last_name, m.email, m.phone, m.status, m.membership_date;
 GO
 
-PRINT '? MemberActivity view created!';
+PRINT '✅ MemberActivity view created!';
 GO
 
 -- ============================================
 -- VIEW 5: Library Statistics Dashboard
--- Single view with summary statistics
 -- ============================================
 PRINT 'Creating view: LibraryStats...';
 GO
@@ -164,7 +159,7 @@ SELECT
     (SELECT COUNT(*) FROM borrowing WHERE status = 'Returned') AS CompletedReturns;
 GO
 
-PRINT '? LibraryStats view created!';
+PRINT '✅ LibraryStats view created!';
 GO
 
 -- ============================================
@@ -176,8 +171,7 @@ PRINT '============================================';
 GO
 
 SELECT 
-    TABLE_NAME AS ViewName,
-    TABLE_TYPE
+    TABLE_NAME AS ViewName
 FROM INFORMATION_SCHEMA.VIEWS
 WHERE TABLE_SCHEMA = 'dbo'
 ORDER BY TABLE_NAME;
@@ -195,8 +189,8 @@ PRINT '1. Currently Borrowed Books:';
 SELECT TOP 5 * FROM CurrentlyBorrowed;
 GO
 
-PRINT '2. Overdue Books:';
-SELECT TOP 5 * FROM OverdueBooks;
+PRINT '2. Overdue Books (sorted by due date):';
+SELECT TOP 5 * FROM OverdueBooks ORDER BY due_date ASC;
 GO
 
 PRINT '3. Book Popularity:';
@@ -233,7 +227,7 @@ SELECT
     genre,
     COUNT(*) AS BookCount,
     SUM(TotalBorrows) AS TotalBorrows,
-    AVG(TotalBorrows) AS AvgBorrowsPerBook
+    CAST(AVG(CAST(TotalBorrows AS FLOAT)) AS DECIMAL(10,2)) AS AvgBorrowsPerBook
 FROM BookPopularity
 GROUP BY genre
 ORDER BY AvgBorrowsPerBook DESC;
@@ -257,12 +251,12 @@ SELECT
     CurrentlyBorrowed,
     OverdueBooks,
     TotalFinesCollected,
-    ROUND(CAST(AvailableCopies AS FLOAT) / TotalCopies * 100, 2) AS AvailabilityPercentage
+    CAST(CAST(AvailableCopies AS FLOAT) / TotalCopies * 100 AS DECIMAL(10,2)) AS AvailabilityPercentage
 FROM LibraryStats;
 GO
 
 PRINT '============================================';
-PRINT '? PHASE 5 COMPLETE!';
+PRINT '✅ PHASE 5 COMPLETE!';
 PRINT '============================================';
 PRINT 'Views created:';
 PRINT '  1. CurrentlyBorrowed  - Current borrowings with status alerts';

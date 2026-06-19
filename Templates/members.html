@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>👤 Members</h2>
+<p style="color: #7f8c8d; margin-bottom: 20px;">Manage library members</p>
+
+<div style="margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
+    <button class="btn btn-success" onclick="addMember()">➕ Add Member</button>
+    <button class="btn btn-primary" onclick="loadMembers()">🔄 Refresh</button>
+</div>
+
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody id="membersTableBody">
+            <tr>
+                <td colspan="5" style="text-align: center; padding: 30px;">Loading members...</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<script>
+    async function loadMembers() {
+        try {
+            const response = await fetch('/api/members');
+            const members = await response.json();
+            
+            const tbody = document.getElementById('membersTableBody');
+            tbody.innerHTML = '';
+            
+            if (members.error) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 30px;">❌ ${members.error}</td></tr>`;
+                return;
+            }
+            
+            if (members.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 30px;">No members found</td></tr>`;
+                return;
+            }
+            
+            members.forEach(member => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${member.id}</td>
+                    <td><strong>${member.name}</strong></td>
+                    <td>${member.email}</td>
+                    <td>${member.phone || 'N/A'}</td>
+                    <td style="color: ${member.status === 'Active' ? '#27ae60' : '#e74c3c'}; font-weight: 600;">
+                        ${member.status}
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        } catch (error) {
+            document.getElementById('membersTableBody').innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 30px;">❌ Error loading members</td></tr>`;
+        }
+    }
+    
+    function addMember() {
+        alert('Add member functionality - Coming soon!');
+    }
+    
+    document.addEventListener('DOMContentLoaded', loadMembers);
+</script>
+{% endblock %}

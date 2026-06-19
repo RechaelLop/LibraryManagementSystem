@@ -8,13 +8,33 @@ A complete Library Management System built with **Microsoft SQL Server** that de
 ## Overview
 
 This Library Management System is a fully functional database application that manages:
-- ?? Books inventory
-- ?? Library members
-- ?? Borrowing and returning transactions
-- ?? Fine calculation for overdue books
-- ?? Reporting and analytics
+- Books inventory
+- Library members
+- Borrowing and returning transactions
+- Fine calculation for overdue books
+- Reporting and analytics
 
 The project showcases advanced SQL skills including stored procedures, views, transaction management, and error handling.
+
+---
+
+## Tech Stack
+
+Backend
+
+| Technology | Purpose |
+|------------|---------|
+| **Microsoft SQL Server** | Production database engine |
+| **T-SQL** | Stored procedures, views, queries |
+| **pyodbc** | Python to SQL Server connector |
+
+Frontend
+
+| Technology | Purpose |
+|------------|---------|
+| **Python 3.x** | Application logic and backend |
+| **Tkinter** | GUI framework for desktop interface |
+| **ttk** | Modern themed widgets |
 
 ---
 
