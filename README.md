@@ -96,6 +96,9 @@ Tables
 | fine_amount | DECIMAL(10,2) | Calculated fine amount |
 
 
+---
+
+
 ## Project Structure
 
 LibraryManagementSystem/
@@ -107,7 +110,16 @@ LibraryManagementSystem/
 ├── 06_TestQueries.sql         - Complete test suite
 └── README.md                  - This file
 
+
+---
+
+
 ## Author
 
 Rechael Lopes
 GitHub: https://github.com/RechaelLop/LibraryManagementSystem 
+
+---
+
+
+**Live Demo:** [https://web-production-eba4ff.up.railway.app/](https://web-production-eba4ff.up.railway.app/)
